@@ -1,0 +1,122 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<form method="post" action="{% url 'home' %}">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <div class="col">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_Nitrogen">Nitrogen</label>
+                    <input type="number" class="form-control" id="id_Nitrogen" name="Nitrogen" placeholder="Nitrogen">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_Phosphorus">Phosphorus</label>
+                    <input type="number" class="form-control" id="id_Phosphorus" name="Phosphorus"
+                        placeholder="Phosphorus">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_Potassium">Potassium</label>
+                    <input type="number" class="form-control" id="id_Potassium" name="Potassium"
+                        placeholder="Potassium">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_Temperature">Temperature</label>
+                    <input type="number" class="form-control" id="id_Temperature" name="Temperature"
+                        placeholder="Temperature">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_Humidity">Humidity</label>
+                    <input type="number" class="form-control" id="id_Humidity" name="Humidity" placeholder="Humidity">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_pH">pH</label>
+                    <input type="number" class="form-control" id="id_pH" name="pH" placeholder="pH">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_Rainfall">Rainfall</label>
+                    <input type="number" class="form-control" id="id_Rainfall" name="Rainfall" placeholder="Rainfall">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</form>
+
+<!--generate recommendations-->
+{% if crop_models.crop_reco %}
+<div class="recommendations">
+    <h3>Recommendations:</h3>
+    <div class="recommendation-content">
+        <p>{{ crop_models.crop_reco }}</p>
+    </div>
+</div>
+{% endif %}
+
+<style>
+/* CSS styles */
+.recommendations {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.recommendation-content p {
+    margin-bottom: 10px;
+}
+
+.recommendation-content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+</style>
+
+<script>
+// JavaScript/jQuery code
+$(document).ready(function() {
+    // Automatically format recommendation content
+    $('.recommendation-content').each(function() {
+        var content = $(this).find('p').html(); // Get the recommendation content
+        var formattedContent = formatContent(content); // Format the content
+        $(this).html(formattedContent); // Replace the original content with formatted content
+    });
+});
+
+// Function to format recommendation content
+function formatContent(content) {
+    // Split content by newline characters
+    var lines = content.split('\n');
+    var formattedContent = '';
+
+    // Loop through each line and format accordingly
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+
+        // If line starts with an asterisk (*), treat it as a bullet point
+        if (line.startsWith('*')) {
+            formattedContent += '<li>' + line.substr(1).trim() + '</li>';
+        } else {
+            formattedContent += '<p>' + line + '</p>';
+        }
+    }
+
+    // Wrap formatted content in a ul if there are bullet points
+    if (formattedContent.includes('<li>')) {
+        formattedContent = '<ul>' + formattedContent + '</ul>';
+    }
+
+    return formattedContent;
+}
+</script>
+
+{% endblock %}
